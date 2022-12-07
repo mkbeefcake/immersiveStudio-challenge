@@ -7,14 +7,22 @@
   "scripts": {
     "start": "parcel index.html --open",
     "build": "parcel build index.html",
+    "postbuild": "ncp ./public ./dist --filter '**/*.*'",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "parcel": "^2.8.0"
+    "@babel/core": "7.2.0",
+    "@babel/preset-env": "^7.5.5",
+    "ncp": "^2.0.0",
+    "parcel": "^2.8.0",
+    "parcel-bundler": "^1.6.1"
   },
   "dependencies": {
-    "three": "^0.147.0"
+    "three": "^0.147.0",
+    "three-addons": "^1.2.0",
+    "three-orbit-controls": "^82.1.0",
+    "three-orbitcontrols": "^2.110.3"
   }
 }
