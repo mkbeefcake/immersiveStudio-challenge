@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
-import { LightProbeGenerator } from "three/examples/jsm/lights/LightProbeGenerator"
-
+import { BaseGlbLoader } from './loader/BaseGlbLoader';
+import { BasePlane } from './plane/BasePlane';
 
 console.clear();
 
@@ -15,36 +15,39 @@ export class App {
 
   constructor() {
 
-    this.createRender();
     this.createScene();
     this.createCamera();
-    this.createControl();
     this.createBackground();
+    this.createPlane();
+    this.createControl();
+    
+    this.load3dModel();
 
     window.addEventListener( 'resize', () => {
       this.onWindowResize();
     });
 
-    this.render();
+    this.animate();
     console.log('App initialized');
   }
 
-  createRender() {
+  createScene() {
+    // create renderer
     this.renderer = new THREE.WebGLRenderer({antialias: true});
     this.renderer.setSize(window.innerWidth, window.innerHeight);
     this.renderer.setPixelRatio(window.devicePixelRatio);
 
     document.body.append(this.renderer.domElement);
     this.renderer.domElement.id = "WebGLApp";
-  }
 
-  createScene() {
+    // create scene
     this.scene = new THREE.Scene();
   }
 
   createCamera() {
-    this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 1000);
-    this.camera.position.set(0, 0, 30);    
+    this.camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 300);
+    this.camera.position.set(0, 15, 25);
+    this.camera.lookAt(40, 1, 0);
   }
 
   createControl() {
@@ -57,13 +60,13 @@ export class App {
     this.controls.maxDistance = 50;
     this.controls.enablePan = false;
 
-    // probe
+     // probe
     this.lightProbe = new THREE.LightProbe();
     this.scene.add( this.lightProbe );
 
     // light
     this.directionalLight = new THREE.DirectionalLight( 0xffffff, API.directionalLightIntensity );
-    this.directionalLight.position.set( 10, 10, 10 );
+    this.directionalLight.position.set( 5, 5, 5 );
     this.scene.add( this.directionalLight );    
   }
 
@@ -71,28 +74,20 @@ export class App {
   
     const urls = this.getTextureUrls('assets/TropicalSunnyDay_', '.jpg' );
     new THREE.CubeTextureLoader().load( urls, ( cubeTexture ) => {    
+      
       cubeTexture.encoding = THREE.sRGBEncoding;
-
       this.scene.background = cubeTexture;
-
-      this.lightProbe.copy( LightProbeGenerator.fromCubeTexture( cubeTexture ) );
-
-      // const geometry = new THREE.SphereGeometry( 5, 64, 32 );
-      // const material = new THREE.MeshStandardMaterial( {
-      //   color: 0xffffff,
-      //   metalness: 0,
-      //   roughness: 0,
-      //   envMap: cubeTexture,
-      //   envMapIntensity: API.envMapIntensity,
-      // } );
-
-      // // mesh
-      // var mesh = new THREE.Mesh( geometry, material );
-      // this.scene.add( mesh );
-
       this.render();
 
     } );    
+  }
+
+  createPlane() {
+    this.plane = new BasePlane(this.scene);
+  }
+
+  load3dModel() {
+    this.model = new BaseGlbLoader(this.scene, "assets/round_platform.glb", {x:0, y:0.3, z:0})
   }
 
   getTextureUrls( prefix, postfix ) {
@@ -114,7 +109,14 @@ export class App {
     this.render();
   }
 
+  animate = () => {
+    requestAnimationFrame(this.animate);
+    this.render();
+  }
+
   render() {
+    this.model.render();
+    
     this.renderer.render( this.scene, this.camera );
   }  
 

@@ -21,7 +21,6 @@
   },
   "dependencies": {
     "three": "^0.147.0",
-    "three-addons": "^1.2.0",
     "three-orbit-controls": "^82.1.0",
     "three-orbitcontrols": "^2.110.3"
   }
