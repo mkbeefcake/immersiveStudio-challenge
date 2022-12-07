@@ -1,0 +1,20 @@
+{
+  "name": "immersivestudio-challenge",
+  "version": "1.0.0",
+  "description": "Immersive Studio challenge project",
+  "source": "index.html",
+  "browserslist": "> 0.5%, last 2 versions, not dead",
+  "scripts": {
+    "start": "parcel index.html --open",
+    "build": "parcel build index.html",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "parcel": "^2.8.0"
+  },
+  "dependencies": {
+    "three": "^0.147.0"
+  }
+}
