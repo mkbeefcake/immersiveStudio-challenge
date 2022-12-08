@@ -2,14 +2,9 @@ import * as THREE from 'three'
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
 import { BaseGlbLoader } from './loader/BaseGlbLoader';
 import { BasePlane } from './plane/BasePlane';
+import { WaterPlane } from './plane/WaterPlane';
 
 console.clear();
-
-const API = {
-  lightProbeIntensity: 1.0,
-  directionalLightIntensity: 0.2,
-  envMapIntensity: 1
-};
 
 export class App {
 
@@ -20,8 +15,8 @@ export class App {
     this.createBackground();
     this.createPlane();
     this.createControl();
-    
     this.load3dModel();
+    this.createRainParticles();
 
     window.addEventListener( 'resize', () => {
       this.onWindowResize();
@@ -65,8 +60,9 @@ export class App {
     this.scene.add( this.lightProbe );
 
     // light
-    this.directionalLight = new THREE.DirectionalLight( 0xffffff, API.directionalLightIntensity );
+    this.directionalLight = new THREE.DirectionalLight( 0xffffff, 1.0 );
     this.directionalLight.position.set( 5, 5, 5 );
+    this.directionalLight.target.position.set(0, 0, 0);
     this.scene.add( this.directionalLight );    
   }
 
@@ -84,10 +80,35 @@ export class App {
 
   createPlane() {
     this.plane = new BasePlane(this.scene);
+    this.waterPlane = new WaterPlane(this.scene);
   }
 
   load3dModel() {
     this.model = new BaseGlbLoader(this.scene, "assets/round_platform.glb", {x:0, y:0.3, z:0})
+  }
+
+  createRainParticles() {
+    this.rainCount=250;
+    const points = [];
+    for(let i=0; i<this.rainCount; i++) {
+      var rainDrop = new THREE.Vector3(
+        Math.random()*40-20,
+        Math.random()*25,
+        -Math.random()*40 + 10
+      )
+      points.push(rainDrop);
+    }
+    
+    this.rainGeo = new THREE.BufferGeometry(50, 50, 50).setFromPoints(points);
+    this.rainMaterial = new THREE.PointsMaterial({
+      color: 0xffffff,
+      size: 0.2,
+      opacity: 0.4,
+      transparent: true,
+    })
+    
+    this.rain = new THREE.Points(this.rainGeo, this.rainMaterial);
+    this.scene.add(this.rain)  
   }
 
   getTextureUrls( prefix, postfix ) {
@@ -114,9 +135,19 @@ export class App {
     this.render();
   }
 
+  renderRainDrop() {
+    const positions = this.rainGeo.attributes.position.array;
+    for (let i = 0; i < positions.length; i += 3) {
+        positions[i + 1] -= 0.5;
+        if (positions[i+1] < 0) positions[i + 1] = 25;
+    }
+
+    this.rainGeo.attributes.position.needsUpdate = true;
+  }  
+
   render() {
     this.model.render();
-    
+    this.renderRainDrop();
     this.renderer.render( this.scene, this.camera );
   }  
 

@@ -5,11 +5,12 @@ export class BasePlane {
     constructor(scene) {
 
         const geometry = new THREE.PlaneGeometry( 50, 50);
-        const floorMat = new THREE.MeshStandardMaterial( {
+        const floorMat = new THREE.MeshPhongMaterial( {
           roughness: 0.7,
           color: 0xffffff,
           bumpScale: 0.002,
-          metalness: 0.02
+          metalness: 0.02,
+          shininess: 100,
         });
     
         const texture = new THREE.TextureLoader().load( "assets/floor.png");
