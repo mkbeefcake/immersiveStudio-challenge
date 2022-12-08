@@ -30,9 +30,5 @@ export class WaterPlane extends BaseComponent {
         this.water.position.set(0, 0.1, 0);
         scene.add(this.water);
     }
-
-    render() {
-        
-    }
     
 }
