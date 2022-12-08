@@ -1,21 +1,21 @@
 import * as THREE from 'three'
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls"
+import { BaseApp } from './components/base/BaseApp';
 import { BaseGlbLoader } from './mainscene/loader/BaseGlbLoader';
-import { RainParticles } from './mainscene/particles/rainparticles';
+import { RainParticles } from './mainscene/particles/RainParticle';
 import { BasePlane } from './mainscene/plane/BasePlane';
 import { WaterPlane } from './mainscene/plane/WaterPlane';
 
-console.clear();
 
-export class App {
+export class App extends BaseApp {
 
   constructor() {
 
+    super();
+
     this.initScene();
     this.createSkybox();
-
     this.loadComponents();
-    this.createRainParticles();
 
     window.addEventListener( 'resize', () => {
       this.onWindowResize();
@@ -74,21 +74,11 @@ export class App {
   }
 
   loadComponents() {
-    this.plane = new BasePlane(this.scene);
-    this.waterPlane = new WaterPlane(this.scene);
-    this.model = new BaseGlbLoader(this.scene, "assets/round_platform.glb", {x:0, y:0.3, z:0})
-    this.rainParticle = new RainParticles(this.scene, 250);
+    this.addComponent(new BasePlane(this.scene));
+    this.addComponent(new WaterPlane(this.scene));
+    this.addComponent(new BaseGlbLoader(this.scene, "assets/round_platform.glb", {x:0, y:0.3, z:0}));
+    this.addComponent(new RainParticles(this.scene, 250));
   }
-
-  getTextureUrls( prefix, postfix ) {
-
-    return [
-      prefix + 'px' + postfix, prefix + 'nx' + postfix,
-      prefix + 'py' + postfix, prefix + 'ny' + postfix,
-      prefix + 'pz' + postfix, prefix + 'nz' + postfix
-    ];
-
-  };
 
   onWindowResize() {
 
@@ -99,15 +89,9 @@ export class App {
     this.render();
   }
 
-  animate = () => {
-    requestAnimationFrame(this.animate);
-    this.render();
-  }
 
-  render() {    
-    this.waterPlane.render();
-    this.model.render();
-    this.rainParticle.render();
+  render() {
+    super.render();
     this.renderer.render( this.scene, this.camera );
   }  
 

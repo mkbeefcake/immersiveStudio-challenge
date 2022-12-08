@@ -1,10 +1,13 @@
 import * as THREE from 'three'
 import { Water } from 'three/examples/jsm/objects/Water';
 import { Sky } from 'three/examples/jsm/objects/Sky';
+import { BaseComponent } from '../../components/base/BaseComponent';
 
-export class WaterPlane {
+export class WaterPlane extends BaseComponent {
     
     constructor(scene) {
+        super();
+
         this.waterGeometry = new THREE.PlaneGeometry( 20, 20);
         this.waterGeometry.rotateX( - Math.PI / 2);
 
