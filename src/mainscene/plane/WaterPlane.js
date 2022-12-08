@@ -29,8 +29,7 @@ export class WaterPlane {
     }
 
     render() {
-        this.water.material.uniforms[ 'time' ].value += 1.0 / 60.0;
-
+        
     }
     
 }

@@ -17,17 +17,17 @@ export class BaseGlbLoader {
 
             } );
 
-            this.model1 = SkeletonUtils.clone( gltf.scene );
-            this.model1.position.x = position.x;
-            this.model1.position.y = position.y;
-            this.model1.position.z = position.z;
+            this._model = SkeletonUtils.clone( gltf.scene );
+            this._model.position.x = position.x;
+            this._model.position.y = position.y;
+            this._model.position.z = position.z;
 
-            scene.add( this.model1);
+            scene.add( this._model);
         } );        
     }
 
     render() {
-        if (this.model1)
-            this.model1.rotation.y -= SPEED * 2;
+        if (this._model)
+            this._model.rotation.y -= SPEED * 2;
     }
 }
