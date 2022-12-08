@@ -55,13 +55,13 @@ export class App {
     this.controls.maxDistance = 50;
     this.controls.enablePan = false;
 
-     // probe
+    // probe
     this.lightProbe = new THREE.LightProbe();
     this.scene.add( this.lightProbe );
 
     // light
     this.directionalLight = new THREE.DirectionalLight( 0xffffff, 1.0 );
-    this.directionalLight.position.set( 5, 5, 5 );
+    this.directionalLight.position.set( 5, 5, 0 );
     this.directionalLight.target.position.set(0, 0, 0);
     this.scene.add( this.directionalLight );    
   }
@@ -146,6 +146,7 @@ export class App {
   }  
 
   render() {
+    this.waterPlane.render();
     this.model.render();
     this.renderRainDrop();
     this.renderer.render( this.scene, this.camera );
